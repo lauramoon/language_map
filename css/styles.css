@@ -1,0 +1,84 @@
+
+body {
+  text-align: center;
+  color: #206a5d;
+  background-color: #f1f1e8;
+}
+
+p {
+  font-family: Arial, sans-serif;
+
+  line-height: 1.5em;
+  margin: .2em auto .5em;
+  padding-bottom: 1em;
+}
+
+h1 {
+  font-size: 3em;
+}
+
+.heading {
+  background-color: #bfdcae;
+  padding-top: 20px;
+  padding-bottom: 30px;
+}
+
+.description {
+  vertical-align: top;
+  width: 400px;
+  text-align: left;
+  display: inline-block;
+  margin-left: 20px;
+}
+
+.mapspace {
+  padding-top: 20px;
+  display: inline-block;
+}
+
+.footer {
+  background-color: #bfdcae;
+  padding: 2em;
+  margin-top: 2em;
+}
+#mapid {
+  width: 800px;
+  height:800px;
+  margin: auto;
+
+}
+
+.info {
+    padding: 6px 8px;
+    background: white;
+    background: rgba(255,255,255,0.8);
+    box-shadow: 0 0 15px rgba(0,0,0,0.2);
+    border-radius: 5px;
+}
+
+.title {
+  width: 400px;
+  transform: translate(-200px, 0);
+  font: 14px Arial, Helvetica, sans-serif;
+}
+
+.info h4 {
+    margin: 0;
+    color: #555;
+    font-size: 1.5em;
+    text-align: center;
+}
+
+.legend {
+    width: 140px;
+    text-align: left;
+    color: #555;
+    font: 16px Arial, Helvetica, sans-serif;
+}
+.legend i {
+    width: 18px;
+    height: 18px;
+    float: left;
+    margin-right: 8px;
+    opacity: 0.7;
+}
