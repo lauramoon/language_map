@@ -35,7 +35,7 @@ const colorMap = {
 function style(feature) {
 
     return {
-        fillColor: colorMap[IllinoisLanguages[feature.properties.AFFGEOID10][0]],
+        fillColor: colorMap[parseInt(IllinoisLanguages[feature.properties.AFFGEOID10]["top"])],
         weight: 2,
         opacity: 1,
         color: '#f1f1e8',
@@ -64,10 +64,16 @@ function resetHighlight(e) {
     info.update();
 }
 
+function clickOnRegion(e) {
+  var layer = e.target;
+  details.update(layer.feature.properties);
+}
+
 function onEachFeature(feature, layer) {
     layer.on({
         mouseover: highlightFeature,
         mouseout: resetHighlight,
+        click: clickOnRegion
     });
 }
 
@@ -96,7 +102,7 @@ info.onAdd = function (map) {
 
 info.update = function (props) {
     this._div.innerHTML = '<h4>Most Common Language</h4>(Excluding English and Spanish)<br>' +  (props ?
-        '<b>' + props.NAME10 + '</b><br><h4>' + languageCodes[IllinoisLanguages[props.AFFGEOID10][0]] + '</h4>'
+        '<b>' + props.NAME10 + '</b><br><h4>' + languageCodes[parseInt(IllinoisLanguages[props.AFFGEOID10]["top"])] + '</h4>'
         : 'Hover over a region');
 };
 info.addTo(mymap);
@@ -109,18 +115,63 @@ legend.onAdd = function (map) {
     var labels = ['<h4>Languages</h4>'];
 
     for (const [key, value] of Object.entries(IllinoisLanguages)) {
-      if (!languages.includes(value[0])) {
-        languages.push(value[0]);
+      if (!languages.includes(value.top)) {
+        languages.push(value.top);
       }
     }
 
     for (var i = 0; i < languages.length; i++) {
+      code = parseInt(languages[i])
         labels.push(
-            '<i style="background:' + colorMap[languages[i]] + '"></i> ' +
-            languageCodes[languages[i]]);
+            '<i style="background:' + colorMap[code] + '"></i> ' +
+            languageCodes[code]);
     }
     div.innerHTML = labels.join('<br>');
     return div;
 };
 
 legend.addTo(mymap);
+
+var details = L.control({position: 'bottomleft'});
+
+details.onAdd = function (map) {
+    this._div = L.DomUtil.create('div', 'info details');
+    this.update();
+    return this._div;
+};
+
+details.update = function (props) {
+  this._div.innerHTML = '<h4>Languages</h4>With Over 100 Speakers<br>';
+
+  if (props) {
+    var codeList = IllinoisLanguages[props.AFFGEOID10].ordered;
+    var popMap = IllinoisLanguages[props.AFFGEOID10].pop_map;
+    var population = IllinoisLanguages[props.AFFGEOID10].pop;
+    var listString = "";
+    var language = "";
+    for (var i = 0; i < codeList.length; i++){
+      var code = codeList[i];
+      var percent = Math.round(popMap[code]/population*1000)/10;
+      if (code === "999") {
+        language = "English Only";
+      } else {
+        language = languageCodes[parseInt(code)];
+      }
+      listString += percent.toFixed(1) + "% - " + language + "<br>";
+    }
+
+    this._div.innerHTML += '<b>' + props.NAME10 + '</b><br>' + listString;
+  } else {
+    this._div.innerHTML += 'Click on a region';
+  }
+  //this.bringToFront();
+};
+details.addTo(mymap);
+
+details.getContainer().addEventListener('mouseover', function () {
+    mymap.dragging.disable();
+});
+
+details.getContainer().addEventListener('mouseout', function () {
+        mymap.dragging.enable();
+});
