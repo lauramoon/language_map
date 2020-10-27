@@ -1,4 +1,4 @@
-const IllinoisPums = {
+pumsIllinois = {
 "type": "FeatureCollection",
 "name": "cb_2018_17_puma10_500k",
 "crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:EPSG::4269" } },

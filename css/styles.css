@@ -14,13 +14,14 @@ p {
 }
 
 h1 {
-  font-size: 3em;
+  font-size: 2.5em;
+  margin-bottom: 0;
 }
 
 .heading {
   background-color: #bfdcae;
   padding-top: 20px;
-  padding-bottom: 30px;
+  padding-bottom: 20px;
 }
 
 .description {

@@ -1,46 +1,35 @@
 const mapboxToken = 'pk.eyJ1IjoibGF1cmFtb29uIiwiYSI6ImNrZ2Uya295ZDB1NzQycnA0bnRlbHZ5c2cifQ.WU8s6fuYa8FU45c5OQ8dVQ';
-const mymap = L.map('mapid').setView([39.9, -89], 7);
+const centerMap = {"Illinois": [39.9, -89], "US": [36, -95]};
+const zoomInitMap = {"Illinois": 7, "US": 4.5};
+const languageInfoMap = {"Illinois": languagesIllinois, "US": languagesUS};
+const boundariesMap = {"Illinois": pumsIllinois, "US": pumsUS};
+const geoIDMap = {"Illinois": "AFFGEOID10", "US": "GEO_ID"};
+
+const name = (state === "US") ? "NAME" : "NAME10";
+const geoID = geoIDMap[state];
+const boundaries = boundariesMap[state];
+const languageInfo = languageInfoMap[state];
+const center = centerMap[state];
+const zoomInit = zoomInitMap[state];
+const mymap = L.map('mapid', {
+  center: center,
+  zoom: zoomInit,
+  zoomSnap: 0.5
+});
 var geojson;
-const colorMap = {
-  1270: '#88CCEE',
-  1690: '#AA4499',
-  1440: '#CC6677',
-  1110: '#117733',
-  1564: '#5F4690',
-  1360: '#DDCC77',
-  1960: '#44AA99',
-  1970: '#999933',
-  1210: '#E17C05',
-  1220: '#661100',
-  2920: '#6699CC',
-  1730: '#E58606',
-  4500: '#5D69B1',
-  1235: '#99C945',
-  2475: '#DAA51B',
-  1450: '#2F8AC4',
-  1170: '#332288',
-  1765: '#ED645A',
-  1281: '#CC3A8E',
-  1250: '#A5AA99',
-  1900: '#52BCA3',
-  2575: '#CC61B0',
-  1350: '#24796C',
-  6120: '#764E9F',
-  1290: '#1D6996',
-  1260: '#882255',
-  1055: '#6F4070',
-  2910: '#CC503E',
-};
+
+if (state === "US") {
+  pumsUS.features.splice(-1, 1);
+}
 
 function style(feature) {
-
-    return {
-        fillColor: colorMap[parseInt(IllinoisLanguages[feature.properties.AFFGEOID10]["top"])],
-        weight: 2,
-        opacity: 1,
-        color: '#f1f1e8',
-        fillOpacity: 0.7
-    };
+  return {
+      fillColor: colorMap[parseInt(languageInfo[feature.properties[geoID]]["top"])],
+      weight: 2,
+      opacity: 1,
+      color: '#f1f1e8',
+      fillOpacity: 0.7
+  };
 }
 
 function highlightFeature(e) {
@@ -69,6 +58,12 @@ function clickOnRegion(e) {
   details.update(layer.feature.properties);
 }
 
+// function clickOffMap(mymap) {
+//   //details.update();
+//   L.DomEvent.preventDefault(mymap);
+//   console.log("Clicked off map event.")
+// }
+
 function onEachFeature(feature, layer) {
     layer.on({
         mouseover: highlightFeature,
@@ -76,6 +71,10 @@ function onEachFeature(feature, layer) {
         click: clickOnRegion
     });
 }
+
+L.DomEvent.on(mymap, 'click', function (ev) {
+    L.DomEvent.stopPropagation(ev);
+});
 
 L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=' + mapboxToken, {
 maxZoom: 18,
@@ -85,9 +84,13 @@ attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStree
   'Laguage data from <a href="http://census.gov/">US Census Bureau</a>',
 id: 'mapbox/light-v9',
 tileSize: 512,
-zoomOffset: -1
+zoomOffset: -1,
+zoomSnap: 0.5,
 }).addTo(mymap);
-geojson = L.geoJson(IllinoisPums, {
+
+//mymap.on('click', clickOffMap);
+
+geojson = L.geoJson(boundaries, {
   style: style,
   onEachFeature: onEachFeature
 }).addTo(mymap);
@@ -101,9 +104,11 @@ info.onAdd = function (map) {
 };
 
 info.update = function (props) {
+  const portion = (state === 'US') ? 'state' : 'region';
     this._div.innerHTML = '<h4>Most Common Language</h4>(Excluding English and Spanish)<br>' +  (props ?
-        '<b>' + props.NAME10 + '</b><br><h4>' + languageCodes[parseInt(IllinoisLanguages[props.AFFGEOID10]["top"])] + '</h4>'
-        : 'Hover over a region');
+        '<b>' + props[name] + '</b><br><h4>' +
+        languageCodes[parseInt(languageInfo[props[geoID]]["top"])] + '</h4>'
+        : 'Hover over a ' + portion + ' for name; click for details');
 };
 info.addTo(mymap);
 
@@ -114,7 +119,7 @@ legend.onAdd = function (map) {
     var languages = [];
     var labels = ['<h4>Languages</h4>'];
 
-    for (const [key, value] of Object.entries(IllinoisLanguages)) {
+    for (const [key, value] of Object.entries(languageInfo)) {
       if (!languages.includes(value.top)) {
         languages.push(value.top);
       }
@@ -141,31 +146,32 @@ details.onAdd = function (map) {
 };
 
 details.update = function (props) {
-  this._div.innerHTML = '<h4>Languages</h4>With Over 100 Speakers<br>';
 
   if (props) {
-    var codeList = IllinoisLanguages[props.AFFGEOID10].ordered;
-    var popMap = IllinoisLanguages[props.AFFGEOID10].pop_map;
-    var population = IllinoisLanguages[props.AFFGEOID10].pop;
-    var listString = "";
-    var language = "";
+    const codeList = languageInfo[props[geoID]].ordered;
+    const popMap = languageInfo[props[geoID]].pop_map;
+    const population = languageInfo[props[geoID]].pop;
+    let listString = "";
+    let language = "";
+    let precision = (state === 'US') ? 2 : 1;
     for (var i = 0; i < codeList.length; i++){
-      var code = codeList[i];
-      var percent = Math.round(popMap[code]/population*1000)/10;
+      let code = codeList[i];
+      let percent = Math.round(popMap[code]/population*10000)/100;
       if (code === "999") {
         language = "English Only";
       } else {
         language = languageCodes[parseInt(code)];
       }
-      listString += percent.toFixed(1) + "% - " + language + "<br>";
+      listString += percent.toFixed(precision) + "% - " + language + "<br>";
     }
 
-    this._div.innerHTML += '<b>' + props.NAME10 + '</b><br>' + listString;
+    this._div.innerHTML = '<h4>' + props[name] + ' Languages</h4>With Over 100 Speakers<br><b>'
+     + listString;
   } else {
-    this._div.innerHTML += 'Click on a region';
+    this._div.innerHTML = '<h4>Languages</h4>With Over 100 Speakers<br>Click on a region';
   }
-  //this.bringToFront();
 };
+
 details.addTo(mymap);
 
 details.getContainer().addEventListener('mouseover', function () {
