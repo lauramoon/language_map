@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="utf-8">
-  <title>Languages Spoken in the United States</title>
+  <title>Pennsylvania Languages</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==" crossorigin="" />
   <link rel="stylesheet" href="css/styles.css">
   <link rel="icon" href="favicon.ico">
@@ -13,8 +13,7 @@
 
 <body>
   <div class="heading">
-    <h1>Most Common Languages Spoken in the United States</h1>
-    <h2>(Not Including English and Spanish)</h2>
+    <h1>Most Common Languages in Pennsylvania</h1>
 
   </div>
   <div class="mapspace">
@@ -23,25 +22,22 @@
   </div>
   <div class="description">
     <h2>Background</h2>
-    <p>Spanish and English are the most common languages spoken in the United States.
-    Excluding those two languages, what language is most popular in each state?
-    This map shows the answers.</p>
+    <p>Excluding English and Spanish, Chinese is the most common language spoken at home in Pennsylvania.
+      Unless Pennsylvania German is counted as German,
+      in which case those who speak German at home outnumber those who speak Chinese.
+    The language data used for this map track Pennsylvania German (also known as Pennsylvania Dutch) separately from
+  other dialects of German.</p>
 
-    <p>The language data used to make this map are from the Census Bureau's 2018 American Community Survey.
-      In the dataset used, 1300 languages and language groups are collapsed into about 130 languages and language groups.
-    To see a list of languages spoken in each state, click or tap on the state.</p>
-
-    <h2>State Maps</h2>
-    <ul>
-      <li><a href="Illinois.html">Illinois</a></li>
-      <li><a href="Pennsylvania.html">Pennsylvania</a></li>
-    </ul>
-    <p>More states coming soon!</p>
+    <p>The regions on this map are from the U.S. Census Bureau's Public Use Microdata Areas.
+      Each region has about 100,000-200,000 residents.</p>
+    <p>The language data are from the Census Bureau's 2018 American Community Survey,
+      which collapses over 1300 languages and language groups into about 130 languages and language groups
+      for the Public Use Microdata Samples used for this map.</p>
 
     <h2>Additional Sources</h2>
     <p>Colors used for map and legend from <a href="https://carto.com/carto-colors/">https://carto.com/carto-colors/</a>.<br />
-      Cartographic boundary files found at
-      <a href="https://eric.clst.org/tech/usgeojson/">https://eric.clst.org/tech/usgeojson/</a>. <br />
+      Cartographic boundary files from the Census Bureau converted to geoJson format by
+      <a href="https://mygeodata.cloud/">https://mygeodata.cloud/</a>. <br />
       The map is powered by <a href="https://leafletjs.com/">https://leafletjs.com/</a>. <br>
       Files for this page are on GitHub at <a href="https://github.com/lauramoon/language_map">
         https://github.com/lauramoon/language_map</a>.
@@ -54,11 +50,11 @@
   </div>
 
   <script type="text/javascript">
-    const state = "US";
+    const state = "Pennsylvania";
   </script>
-  <script type="text/javascript" src="scripts/variables.js"></script>
-  <script type="text/javascript" src="scripts/gz_2010_us_040_00_5m.js"></script>
-  <script type="text/javascript" src="scripts/LANP_US.js"></script>
+    <script type="text/javascript" src="scripts/variables.js"></script>
+  <script type="text/javascript" src="scripts/cb_2018_42_puma10_500k.js"></script>
+  <script type="text/javascript" src="scripts/LANP_PA.js"></script>
   <script type="text/javascript" src="scripts/language_codes.js"></script>
   <script type="text/javascript" src="scripts/colors.js"></script>
   <script type="text/javascript" src="scripts/map.js" charset="utf-8"></script>

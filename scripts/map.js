@@ -1,12 +1,11 @@
 const mapboxToken = 'pk.eyJ1IjoibGF1cmFtb29uIiwiYSI6ImNrZ2Uya295ZDB1NzQycnA0bnRlbHZ5c2cifQ.WU8s6fuYa8FU45c5OQ8dVQ';
-const centerMap = {"Illinois": [39.9, -89], "US": [36, -95]};
-const zoomInitMap = {"Illinois": 7, "US": 4.5};
-const languageInfoMap = {"Illinois": languagesIllinois, "US": languagesUS};
-const boundariesMap = {"Illinois": pumsIllinois, "US": pumsUS};
-const geoIDMap = {"Illinois": "AFFGEOID10", "US": "GEO_ID"};
+const centerMap = {"Illinois": [39.9, -89], "US": [36, -95], "Pennsylvania": [41, -77.2]};
+const zoomInitMap = {"Illinois": 7, "US": 4.5, "Pennsylvania": 7.5};
+const languageInfoMap = {"Illinois": languagesIllinois, "US": languagesUS, "Pennsylvania": languagesPennsylvania};
+const boundariesMap = {"Illinois": pumsIllinois, "US": pumsUS, "Pennsylvania": pumsPennsylvania};
 
+const geoID = (state === "US") ? "GEO_ID" : "AFFGEOID10";
 const name = (state === "US") ? "NAME" : "NAME10";
-const geoID = geoIDMap[state];
 const boundaries = boundariesMap[state];
 const languageInfo = languageInfoMap[state];
 const center = centerMap[state];
@@ -81,7 +80,7 @@ maxZoom: 18,
 attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
   '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
   'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>, ' +
-  'Laguage data from <a href="http://census.gov/">US Census Bureau</a>',
+  'Language data from <a href="http://census.gov/">US Census Bureau</a>',
 id: 'mapbox/light-v9',
 tileSize: 512,
 zoomOffset: -1,
